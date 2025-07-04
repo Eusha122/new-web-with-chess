@@ -1,0 +1,21 @@
+{
+  "name": "Eusha Ibna Akbor - Portfolio",
+  "short_name": "Eusha Portfolio",
+  "description": "Tech Explorer, Future Engineer, and Dreamer from Bangladesh",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0ea5e9",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "start_url": "/"
+}

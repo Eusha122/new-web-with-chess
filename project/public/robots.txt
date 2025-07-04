@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://who-is-eusha.netlify.app/sitemap.xml
