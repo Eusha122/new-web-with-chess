@@ -68,7 +68,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
     "Are you even trying? This is embarrassing.",
     "I calculated that blunder 5 moves ago.",
     "You just walked into my trap. Amateur.",
-    "This is what 3000 ELO looks like, kid.",
+    "This is what 2000 ELO looks like, kid.",
     "Your position is hopeless. Just resign already.",
     "I'm not even using my full power yet.",
     "That move made me laugh. Literally.",
@@ -165,7 +165,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
     }));
   };
 
-  const showBotPersonality = (customMessage?: string) => {
+  const showBotPersonality = useCallback((customMessage?: string) => {
     const isGentle = gameState.playerGender === 'female';
     const messages = isGentle ? femaleTrashTalk : maleTrashTalk;
     const message = customMessage || messages[Math.floor(Math.random() * messages.length)];
@@ -184,9 +184,9 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
     setTimeout(() => {
       setGameState(prev => ({ ...prev, showBotMessage: false }));
     }, 4000);
-  };
+  }, [gameState.playerGender, gameState.speechEnabled, speakTrashTalk]);
 
-  const requestBotMove = (fen: string) => {
+  const requestBotMove = useCallback((fen: string) => {
     setGameState(prev => ({ ...prev, botThinking: true }));
     
     requestMove(
@@ -199,9 +199,9 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
         setGameState(prev => ({ ...prev, botThinking: false }));
       }
     );
-  };
+  }, [requestMove]);
 
-  const makeBotMove = (moveString: string) => {
+  const makeBotMove = useCallback((moveString: string) => {
     setGameState(prev => {
       const newGame = new Chess(prev.gamePosition);
       
@@ -256,7 +256,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
 
       return { ...prev, botThinking: false };
     });
-  };
+  }, [playMoveSound, showBotPersonality]);
 
   const onDrop = (sourceSquare: string, targetSquare: string, piece: string) => {
     if (!gameState.isPlayerTurn || gameState.botThinking) {
@@ -436,7 +436,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
                 <h2 className="text-lg sm:text-2xl font-bold font-poppins truncate">Chess vs Eusha</h2>
                 <div className="hidden sm:flex items-center space-x-2 px-3 py-1 bg-red-600/20 rounded-full border border-red-500/30">
                   <Zap className="w-4 h-4 text-red-400" />
-                  <span className="text-sm text-red-400 font-medium">Stockfish 16 • {engineStrength} ELO</span>
+                  <span className="text-sm text-red-400 font-medium">Engine • {engineStrength} ELO</span>
                 </div>
                 {gameState.gameStarted && (
                   <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-400">
@@ -493,7 +493,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
                   <div className="bg-dark-700/50 rounded-xl p-4 sm:p-6">
                     <h3 className="text-lg sm:text-xl font-bold mb-4">Challenge Eusha!</h3>
                     <p className="text-gray-400 mb-6 text-sm sm:text-base">
-                      Face off against Stockfish 16 WASM engine running at {engineStrength} ELO. Choose your details and prepare for battle!
+                      Face off against a chess engine running at {engineStrength} ELO. Choose your details and prepare for battle!
                     </p>
                     
                     <div className="space-y-4">
@@ -600,7 +600,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
                         whileTap={{ scale: 0.98 }}
                         className="w-full px-6 sm:px-8 py-3 bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-semibold text-white transition-all duration-200 text-sm sm:text-base"
                       >
-                        {!isReady ? 'Loading Stockfish 16...' : 'Start Battle!'}
+                        {!isReady ? 'Loading Engine...' : 'Start Battle!'}
                       </motion.button>
                     </div>
                   </div>
@@ -626,7 +626,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
                               />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h4 className="font-bold text-sm sm:text-base truncate">Eusha (Stockfish 16)</h4>
+                              <h4 className="font-bold text-sm sm:text-base truncate">Eusha (Engine)</h4>
                               <p className="text-xs sm:text-sm text-gray-400">Rating: {engineStrength}</p>
                             </div>
                           </div>
@@ -703,7 +703,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
                               />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h4 className="font-bold text-sm sm:text-base truncate">Eusha (Stockfish 16)</h4>
+                              <h4 className="font-bold text-sm sm:text-base truncate">Eusha (Engine)</h4>
                               <p className="text-xs sm:text-sm text-gray-400">Rating: {engineStrength}</p>
                             </div>
                           </div>
@@ -758,7 +758,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ isOpen, onClose }) => {
                         Moves: {Math.ceil(gameState.moveHistory.length / 2)}
                       </p>
                       <div className="mt-2 text-xs text-gray-500">
-                        Engine: Stockfish 16 WASM • {engineStrength} ELO • 150ms movetime
+                        Engine: Chess AI • {engineStrength} ELO • Fast response
                       </div>
                     </div>
 
